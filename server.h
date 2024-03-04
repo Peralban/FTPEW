@@ -111,9 +111,11 @@ client_t *get_client_from_list(client_list_t *list, int socket);
 /**
  * @brief Entry point for the FTP server.
  *
- * This function serves as the entry point for the FTP server. It initializes the server,
- * starts listening for client connections and handles incoming requests.
+ * This function serves as the entry point for the FTP server. It takes command line arguments
+ * as parameters, which could be used for configuration purposes.
  *
+ * @param ac The count of command line arguments.
+ * @param av The array of command line arguments.
  * @return Returns 0 on successful execution and non-zero on failure.
  */
-int myftp(void);
+int myftp(int ac, char **av);

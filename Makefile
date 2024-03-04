@@ -6,7 +6,7 @@
 ##
 
 SRC	=	main.c			\
-		server.c		\
+        myftp.c			\
 		client_list.c	\
 
 OBJ	=	$(SRC:.c=.o)
@@ -31,6 +31,7 @@ clean:
 
 fclean:	clean
 	rm -f $(NAME)
+	rm -f unit_tests*
 
 re:	fclean all
 

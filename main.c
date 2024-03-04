@@ -15,5 +15,5 @@ int main(int ac, char **av)
         return 0;
     if (ac != 3)
         return 84;
-    return myftp();
+    return myftp(ac, av);
 }
