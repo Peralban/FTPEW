@@ -47,6 +47,9 @@ void add_client_to_list(client_list_t **list, client_t *client)
         while (tmp->next != NULL)
             tmp = tmp->next;
         tmp->next = malloc(sizeof(client_list_t));
+        if (tmp->next == NULL) {
+            return;
+        }
         tmp->next->client = client;
         tmp->next->next = NULL;
         tmp->next->prev = tmp;
