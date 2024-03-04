@@ -31,6 +31,10 @@ jobs:
             ErrorLine=$(cut -d ":" -f 2 <<< $line)
             echo "::error title=$ErrorType coding style error: #$ErrorFile#L$ErrorLine:: $ErrorCode"
           done < $result
+          if [ -s $result ];
+          then
+            exit 1
+          fi
 
   check_program_compilation:
     runs-on: ubuntu-latest

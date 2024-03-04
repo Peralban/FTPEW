@@ -17,6 +17,35 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#define EXIT_FAILURE 84
+#define EXIT_SUCCESS 0
+
+typedef enum {
+    SOCKET,
+    BIND,
+    LISTEN,
+    SELECT,
+    ACCEPT,
+    READ,
+    WRITE,
+    CLOSE,
+    FORK,
+    CHDIR
+} error_type_t;
+
+static const char *error_messages[] = {
+    "Socket creation failed",
+    "Binding failed",
+    "Listening failed",
+    "Select failed",
+    "Accept failed",
+    "Read failed",
+    "Write failed",
+    "Close failed",
+    "Fork failed",
+    "Chdir failed"
+};
+
 typedef enum {
     FILE_TRANSFER,
     OTHER
@@ -25,7 +54,7 @@ typedef enum {
 typedef struct client_s {
     //Client info
     int socket;
-    struct sockaddr_in serverAddress;
+    struct sockaddr_in *clientAddress;
     //Type transfer info
     client_state_t state;
     //If file transfer
@@ -64,7 +93,7 @@ client_list_t *create_client_list(void);
  * @param serverAddress The server address of the client.
  * @return A pointer to the newly created client.
  */
-client_t *create_client(int socket, struct sockaddr_in serverAddress);
+client_t *create_client(int socket, struct sockaddr_in *serverAddress);
 
 /**
  * @brief Adds a client to a client list.
@@ -90,7 +119,8 @@ void remove_client_from_list(client_list_t **list, client_t *client);
 /**
  * @brief Removes a client from a client list by socket.
  *
- * This function removes a client from a given client list using the client's socket.
+ * This function removes a client from a given client list using the client's
+ * socket.
  *
  * @param list A double pointer to the client list.
  * @param socket The socket of the client to be removed.
@@ -100,7 +130,8 @@ void remove_client_from_list_by_socket(client_list_t **list, int socket);
 /**
  * @brief Retrieves a client from a client list by socket.
  *
- * This function retrieves a client from a given client list using the client's socket.
+ * This function retrieves a client from a given client list using the client's
+ * socket.
  *
  * @param list A pointer to the client list.
  * @param socket The socket of the client to be retrieved.
@@ -111,9 +142,38 @@ client_t *get_client_from_list(client_list_t *list, int socket);
 /**
  * @brief Entry point for the FTP server.
  *
- * This function serves as the entry point for the FTP server. It initializes the server,
- * starts listening for client connections and handles incoming requests.
+ * This function serves as the entry point for the FTP server. It takes command
+ * line arguments
+ * as parameters, which could be used for configuration purposes.
  *
+ * @param ac The count of command line arguments.
+ * @param av The array of command line arguments.
  * @return Returns 0 on successful execution and non-zero on failure.
  */
-int myftp(void);
+int myftp(int ac, char **av);
+
+/**
+ * @brief Checks the return value of a function and handles errors.
+ *
+ * This function checks the return value of a function and handles any errors
+ * that may have occurred.
+ * If the return value indicates an error, the function prints an error message
+ * corresponding to the error type and exits the program.
+ *
+ * @param value_to_check The return value to check.
+ * @param error_type The type of error that may have occurred.
+ */
+void check_return_value(int value_to_check, error_type_t error_type);
+
+/**
+ * @brief Main loop for the FTP server.
+ *
+ * This function serves as the main loop for the FTP server. It takes the
+ * server socket and server address
+ * as parameters, and continuously listens for and handles client connections.
+ *
+ * @param server_socket The socket of the server.
+ * @param server_address The address of the server.
+ * @return Returns 0 on successful execution and non-zero on failure.
+ */
+int server_loop(int server_socket, struct sockaddr_in *server_address);
