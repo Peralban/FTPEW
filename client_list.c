@@ -17,7 +17,7 @@ client_list_t *create_client_list(void)
     return (list);
 }
 
-client_t *create_client(int socket, struct sockaddr_in clientAddress)
+client_t *create_client(int socket, struct sockaddr_in *clientAddress)
 {
     client_t *client = malloc(sizeof(client_t));
 
@@ -74,36 +74,4 @@ void remove_client_from_list(client_list_t **list, client_t *client)
         return;
     prev->next = tmp->next;
     free(tmp);
-}
-
-void remove_client_from_list_by_socket(client_list_t **list, int socket)
-{
-    client_list_t *tmp = *list;
-    client_list_t *prev = NULL;
-
-    if (tmp != NULL && tmp->client->socket == socket) {
-        *list = tmp->next;
-        free(tmp);
-        return;
-    }
-    while (tmp != NULL && tmp->client->socket != socket) {
-        prev = tmp;
-        tmp = tmp->next;
-    }
-    if (tmp == NULL)
-        return;
-    prev->next = tmp->next;
-    free(tmp);
-}
-
-client_t *get_client_from_list(client_list_t *list, int socket)
-{
-    client_list_t *tmp = list;
-
-    while (tmp != NULL) {
-        if (tmp->client->socket == socket)
-            return (tmp->client);
-        tmp = tmp->next;
-    }
-    return (NULL);
 }

@@ -5,9 +5,12 @@
 ## Makefile
 ##
 
-SRC	=	main.c			\
-        myftp.c			\
-		client_list.c	\
+SRC	=	main.c					\
+        myftp.c					\
+		client_list.c			\
+		server_loop.c			\
+		check_return_value.c	\
+		client_list_bis.c		\
 
 OBJ	=	$(SRC:.c=.o)
 
