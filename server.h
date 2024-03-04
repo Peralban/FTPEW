@@ -107,3 +107,13 @@ void remove_client_from_list_by_socket(client_list_t **list, int socket);
  * @return A pointer to the client if found, NULL otherwise.
  */
 client_t *get_client_from_list(client_list_t *list, int socket);
+
+/**
+ * @brief Entry point for the FTP server.
+ *
+ * This function serves as the entry point for the FTP server. It initializes the server,
+ * starts listening for client connections and handles incoming requests.
+ *
+ * @return Returns 0 on successful execution and non-zero on failure.
+ */
+int myftp(void);
