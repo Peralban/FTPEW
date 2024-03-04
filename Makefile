@@ -6,6 +6,7 @@
 ##
 
 SRC	=	server.c		\
+		client_list.c	\
 
 OBJ	=	$(SRC:.c=.o)
 
