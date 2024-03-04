@@ -50,3 +50,13 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Clion folder
+.idea/
+
+# Executables
+client
+server
+
+# vscode folder
+.vscode/
