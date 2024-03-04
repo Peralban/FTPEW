@@ -5,7 +5,7 @@
 ** server.c
 */
 
-int main(void)
+int myftp(void)
 {
     return 0;
 }

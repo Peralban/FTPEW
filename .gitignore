@@ -60,3 +60,9 @@ server
 
 # vscode folder
 .vscode/
+
+# executables
+myftp
+
+# Test criterion
+unit_tests*
