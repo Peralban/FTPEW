@@ -17,6 +17,35 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#define EXIT_FAILURE 84
+#define EXIT_SUCCESS 0
+
+typedef enum {
+    SOCKET,
+    BIND,
+    LISTEN,
+    SELECT,
+    ACCEPT,
+    READ,
+    WRITE,
+    CLOSE,
+    FORK,
+    CHDIR
+} error_type_t;
+
+static const char *error_messages[] = {
+    "Socket creation failed",
+    "Binding failed",
+    "Listening failed",
+    "Select failed",
+    "Accept failed",
+    "Read failed",
+    "Write failed",
+    "Close failed",
+    "Fork failed",
+    "Chdir failed"
+};
+
 typedef enum {
     FILE_TRANSFER,
     OTHER
@@ -25,7 +54,7 @@ typedef enum {
 typedef struct client_s {
     //Client info
     int socket;
-    struct sockaddr_in serverAddress;
+    struct sockaddr_in clientAddress;
     //Type transfer info
     client_state_t state;
     //If file transfer

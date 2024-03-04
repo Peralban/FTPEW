@@ -7,9 +7,18 @@
 
 #include "server.h"
 
-struct sockaddr_in setup_server_address(int port)
+static void check_return_value(int value_to_check, error_type_t error_type)
+{
+    if (value_to_check == -1) {
+        perror(error_messages[error_type]);
+        exit(EXIT_FAILURE);
+    }
+}
+
+static struct sockaddr_in setup_server_address(int port)
 {
     struct sockaddr_in serverAddress;
+
     memset(&serverAddress, 0, sizeof(serverAddress));
     serverAddress.sin_family = AF_INET;
     serverAddress.sin_port = htons(port);
@@ -17,29 +26,21 @@ struct sockaddr_in setup_server_address(int port)
     return (serverAddress);
 }
 
+static void bind_and_listen(int tcpSocket, struct sockaddr_in serverAddress)
+{
+    int bindStatus = bind(tcpSocket, (struct sockaddr *)&serverAddress, sizeof(serverAddress));
+    check_return_value(bindStatus, BIND);
+    int listenStatus = listen(tcpSocket, 5);
+    check_return_value(listenStatus, LISTEN);
+}
+
 int myftp(int ac, char **av)
 {
     int tcpSocket = socket(AF_INET, SOCK_STREAM, 0);
     fd_set readfds;
-    if (tcpSocket == -1) {
-        perror("socket");
-        return (84);
-    }
-    struct sockaddr_in serverAddress;
-    memset(&serverAddress, 0, sizeof(serverAddress));
-    serverAddress.sin_family = AF_INET;
-    serverAddress.sin_port = htons(atoi(av[1]));
-    serverAddress.sin_addr.s_addr = INADDR_ANY;
-    int bindStatus = bind(tcpSocket, (struct sockaddr *)&serverAddress, sizeof(serverAddress));
-    if (bindStatus == -1) {
-        perror("bind");
-        return (84);
-    }
-    int listenStatus = listen(tcpSocket, 5);
-    if (listenStatus == -1) {
-        perror("listen");
-        return (84);
-    }
+    check_return_value(tcpSocket, SOCKET);
+    struct sockaddr_in serverAddress = setup_server_address(atoi(av[1]));
+    bind_and_listen(tcpSocket, serverAddress);
     client_list_t *list = create_client_list();
 
     FD_ZERO(&readfds);
@@ -50,16 +51,10 @@ int myftp(int ac, char **av)
         struct sockaddr_in clientAddress;
         socklen_t clientAddressLength = sizeof(clientAddress);
         int selectStatus = select(max_fd + 1, &readfds, NULL, NULL, NULL);
-        if (selectStatus == -1) {
-            perror("select");
-            return (84);
-        }
+        check_return_value(selectStatus, SELECT);
         if (FD_ISSET(tcpSocket, &readfds)) {
             int clientSocket = accept(tcpSocket, (struct sockaddr *) &clientAddress, &clientAddressLength);
-            if (clientSocket == -1) {
-                perror("accept");
-                return (84);
-            }
+            check_return_value(clientSocket, ACCEPT);
             if (clientSocket > max_fd) {
                 printf("error to socket\n");
                 continue;
@@ -73,10 +68,7 @@ int myftp(int ac, char **av)
                     int clientSocket = tmp->client->socket;
                     char buffer[1024];
                     int readStatus = read(clientSocket, buffer, sizeof(buffer));
-                    if (readStatus == -1) {
-                        perror("read");
-                        return (84);
-                    }
+                    check_return_value(readStatus, READ);
                     if (readStatus == 0) {
                         printf("Connection closed by client\n");
                         close(clientSocket);
@@ -88,29 +80,7 @@ int myftp(int ac, char **av)
                     printf("Message from client: %s\n", buffer);
                     const char *message = "Hello World!!!";
                     int writeStatus = write(clientSocket, message, strlen(message));
-                    if (writeStatus == -1) {
-                        perror("write");
-                        return (84);
-                    }
-                    //const char *message = "Hello World!!!";
-                    //int writeStatus = write(clientSocket, message, strlen(message));
-                    //if (writeStatus == -1) {
-                    //    perror("write");
-                    //    return (84);
-                    //}
-                    //char buffer[1024];
-                    //int readStatus = read(clientSocket, buffer, sizeof(buffer));
-                    //if (readStatus == -1) {
-                    //    perror("read");
-                    //    return (84);
-                    //}
-                    //if (readStatus == 0) {
-                    //    printf("Connection closed by client\n");
-                    //    break;
-                    //}
-                    //buffer[readStatus] = '\0';
-                    //sleep(5);
-                    //printf("Message from client: %s\n", buffer);
+                    check_return_value(writeStatus, WRITE);
                     close(clientSocket);}
             }
         }

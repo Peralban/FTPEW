@@ -22,7 +22,7 @@ client_t *create_client(int socket, struct sockaddr_in clientAddress)
     client_t *client = malloc(sizeof(client_t));
 
     client->socket = socket;
-    client->serverAddress = clientAddress;
+    client->clientAddress = clientAddress;
     client->state = OTHER;
     client->file_name = NULL;
     client->file_content = NULL;
