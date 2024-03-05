@@ -19,9 +19,10 @@ NAME	=	myftp
 TESTS_SRC = $(filter-out main.c, $(SRC))	\
 			tests/test.c					\
 			tests/test_error_case.c			\
+			tests/tests_linked_list.c		\
 
 
-CFLAGS		=	-W -Wall -Wextra
+CFLAGS		=	-W -Wall -Wextra -Wshadow
 
 all:	$(NAME)
 
