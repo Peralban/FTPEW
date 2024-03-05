@@ -56,6 +56,15 @@ void add_client_to_list(client_list_t **list, client_t *client)
     }
 }
 
+static void remove_client_bis(client_list_t **list, client_list_t *tmp)
+{
+    if (tmp->prev != NULL)
+        tmp->prev->next = tmp->next;
+    if (tmp->next != NULL)
+        tmp->next->prev = tmp->prev;
+    free(tmp);
+}
+
 void remove_client_from_list(client_list_t **list, client_t *client)
 {
     client_list_t *tmp = *list;
@@ -68,13 +77,10 @@ void remove_client_from_list(client_list_t **list, client_t *client)
             *list = create_client_list();
         free(tmp);
         return;
-    } while (tmp != NULL && tmp->client != client) {
+    }
+    while (tmp != NULL && tmp->client != client) {
         prev = tmp->prev;
         tmp = tmp->next;
-    } if (tmp == NULL)
-        return;
-    tmp->next->prev = prev;
-    if (prev != NULL)
-        prev->next = tmp->next;
-    free(tmp);
+    }
+    remove_client_bis(list, tmp);
 }
