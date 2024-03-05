@@ -33,6 +33,8 @@ LIB_DIR = lib/my
 
 CFLAGS = $(INCLUDE) $(SATAN) $(LIB_FLAGS)
 
+TESTS_CFLAGS = $(INCLUDE) $(SATAN)
+
 
 all:	$(NAME)
 
@@ -51,5 +53,5 @@ fclean:	clean
 re:	fclean all
 
 tests_run:
-	gcc -o unit_tests $(TESTS_SRC) $(CFLAGS) --coverage -lcriterion
+	gcc -o unit_tests $(TESTS_SRC) $(TESTS_CFLAGS) --coverage -lcriterion
 	./unit_tests
