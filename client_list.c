@@ -68,12 +68,10 @@ void remove_client_from_list(client_list_t **list, client_t *client)
             *list = create_client_list();
         free(tmp);
         return;
-    }
-    while (tmp != NULL && tmp->client != client) {
+    } while (tmp != NULL && tmp->client != client) {
         prev = tmp->prev;
         tmp = tmp->next;
-    }
-    if (tmp == NULL)
+    } if (tmp == NULL)
         return;
     tmp->next->prev = prev;
     if (prev != NULL)
