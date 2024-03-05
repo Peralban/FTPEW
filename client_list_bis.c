@@ -5,7 +5,7 @@
 ** client_list_bis.c
 */
 
-#include "server.h"
+#include "include/server.h"
 
 void remove_client_from_list_by_socket(client_list_t **list, int socket)
 {

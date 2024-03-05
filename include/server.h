@@ -17,8 +17,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define EXIT_FAILURE 84
-#define EXIT_SUCCESS 0
+#define EXIT_FAIL 84
+#define EXIT_SUCC 0
 
 typedef enum {
     SOCKET,
@@ -33,18 +33,6 @@ typedef enum {
     CHDIR
 } error_type_t;
 
-static const char *error_messages[] = {
-    "Socket creation failed",
-    "Binding failed",
-    "Listening failed",
-    "Select failed",
-    "Accept failed",
-    "Read failed",
-    "Write failed",
-    "Close failed",
-    "Fork failed",
-    "Chdir failed"
-};
 
 typedef enum {
     FILE_TRANSFER,
@@ -61,10 +49,11 @@ typedef struct client_s {
     char *file_name;
     char *file_content;
     //User info
-    bool is_logged;     //If user is logged to the server
-    bool is_connected;  //If user is connected to the server
+    bool is_logged;     //If user is logged in
+    bool username_is_logged; //If user is connected
     char *username;
     char *password;
+    char *true_path;    //The real password
     char *pwd;          //Current directory
     char *home;         //Home directory
 } client_t;
@@ -73,7 +62,15 @@ typedef struct client_list_s {
     client_t *client;
     struct client_list_s *next;
     struct client_list_s *prev;
+    int list_size;
 } client_list_t;
+
+typedef struct server_s {
+    char *path;
+    int port;
+    int socket;
+    struct sockaddr_in *serverAddress;
+} server_t;
 
 /**
  * @brief Creates a new client list.
@@ -93,7 +90,8 @@ client_list_t *create_client_list(void);
  * @param serverAddress The server address of the client.
  * @return A pointer to the newly created client.
  */
-client_t *create_client(int socket, struct sockaddr_in *serverAddress);
+client_t *create_client(int socket, struct sockaddr_in *serverAddress,
+    char *true_path);
 
 /**
  * @brief Adds a client to a client list.
@@ -173,7 +171,6 @@ void check_return_value(int value_to_check, error_type_t error_type);
  * as parameters, and continuously listens for and handles client connections.
  *
  * @param server_socket The socket of the server.
- * @param server_address The address of the server.
  * @return Returns 0 on successful execution and non-zero on failure.
  */
-int server_loop(int server_socket, struct sockaddr_in *server_address);
+int server_loop(server_t *server);
