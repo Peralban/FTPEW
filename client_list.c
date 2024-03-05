@@ -62,16 +62,21 @@ void remove_client_from_list(client_list_t **list, client_t *client)
     client_list_t *prev = NULL;
 
     if (tmp != NULL && tmp->client == client) {
-        *list = tmp->next;
+        if (tmp->next != NULL)
+            *list = tmp->next;
+        else
+            *list = create_client_list();
         free(tmp);
         return;
     }
     while (tmp != NULL && tmp->client != client) {
-        prev = tmp;
+        prev = tmp->prev;
         tmp = tmp->next;
     }
     if (tmp == NULL)
         return;
-    prev->next = tmp->next;
+    tmp->next->prev = prev;
+    if (prev != NULL)
+        prev->next = tmp->next;
     free(tmp);
 }
