@@ -7,6 +7,7 @@
 
 #include "include/command.h"
 #include "include/server.h"
+#include "include/return_error_code.h"
 
 void handle_client_command(client_t **client, char **command, server_t **serv)
 {
@@ -16,7 +17,6 @@ void handle_client_command(client_t **client, char **command, server_t **serv)
             return;
         }
         if (COMMANDS[i].command == NULL)
-            dprintf((*client)->socket, "500 Syntax error, "
-                                       "command unrecognized.\r\n");
+            dprintf((*client)->socket, return_error(E500, NULL));
     }
 }

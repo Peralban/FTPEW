@@ -12,7 +12,8 @@ SRC	=	main.c					\
 		check_return_value.c	\
 		client_list_bis.c		\
 		command.c				\
-		command_command_list.c	\
+		user_directories_fct.c	\
+		return_error_code.c		\
 
 OBJ	=	$(SRC:.c=.o)
 
@@ -44,6 +45,7 @@ clean:
 	rm -f $(OBJ)
 
 fclean:	clean
+	cd $(LIB_DIR) && make fclean
 	rm -f $(NAME)
 	rm -f unit_tests*
 
