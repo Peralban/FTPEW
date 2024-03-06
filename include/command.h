@@ -113,16 +113,30 @@ void cwd_command(client_t *client, char **command, server_t *server);
  */
 void cdup_command(client_t *client, char **command, server_t *server);
 
+/**
+ * @brief Handles the PWD command
+ *
+ * This function is responsible for handling the PWD (Print Working Directory) command sent by the client.
+ * The PWD command is used to retrieve the current working directory on the server.
+ * It takes as parameters a pointer to the client structure, the command to be executed,
+ * and a pointer to the server structure.
+ *
+ * @param client A pointer to the client structure. This structure contains information about the client.
+ * @param command The command to be executed. This is a string representing the command sent by the client.
+ * @param server A pointer to the server structure. This structure contains information about the server.
+ */
+void pwd_command(client_t *client, char **command, server_t *server);
+
 static const command_component_t COMMANDS[] = {
     {"USER", &user_command},
     {"PASS", &pass_command},
+    {"CWD", &cwd_command},
+    {"CDUP", &cdup_command},
+    {"PWD", &pwd_command},
     {NULL, NULL}
 };
-//    {"CWD", &cwd_command},
-//    {"CDUP", &cdup_command},
 //    {"QUIT", &quit_command},
 //    {"DELE", &dele_command},
-//    {"PWD", &pwd_command},
 //    {"PASV", &pasv_command},
 //    {"PORT", &port_command},
 //    {"HELP", &help_command},

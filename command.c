@@ -10,7 +10,7 @@
 
 void handle_client_command(client_t **client, char **command, server_t **serv)
 {
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 6; i++) {
         if (strcmp(command[0], COMMANDS[i].command) == 0) {
             COMMANDS[i].function(*client, command, *serv);
             return;
