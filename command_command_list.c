@@ -47,5 +47,23 @@ void pass_command(client_t *client, char **command, server_t *server)
         dprintf(client->socket, "332 Need account for login.\r\n");
         return;
     }
-    dprintf(client->socket, "530 Permission denied.\r\n");
+}
+
+void cwd_command(client_t *client, char **command, server_t *server)
+{
+    (void)(server);
+    if (client->is_logged == false) {
+        dprintf(client->socket, "530 Not logged in\r\n");
+        return;
+    }
+    if (!check_param(command[1], client->socket, EXIST))
+        return;
+    strcmp(client->pwd, "/") == 0 ? client->pwd = strdup(client->home) : 0;
+    if (chdir(command[1]) == -1) {
+        dprintf(client->socket, "550 Requested action not taken; file "
+                                "unavailable…\r\n");
+        return;
+    }
+    client->pwd = getcwd(NULL, 0);
+    dprintf(client->socket, "250 Requested file action okay, completed.\r\n");
 }
