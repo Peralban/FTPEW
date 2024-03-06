@@ -49,7 +49,7 @@ val:
 
 fclean:	clean
 	@rm -f $(LIB_NAME)
-	@rm -f libmy.a
+	@rm -f ../../libmy.a
 
 re:	fclean all
 	@rm -f $(OBJ)
