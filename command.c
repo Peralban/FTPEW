@@ -15,5 +15,8 @@ void handle_client_command(client_t **client, char **command, server_t **serv)
             COMMANDS[i].function(*client, command, *serv);
             return;
         }
+        if (COMMANDS[i].command == NULL)
+            dprintf((*client)->socket, "500 Syntax error, "
+                                       "command unrecognized.\r\n");
     }
 }
