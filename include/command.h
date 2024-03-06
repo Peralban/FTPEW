@@ -93,6 +93,26 @@ void pass_command(client_t *client, char **command, server_t *server);
  */
 void cwd_command(client_t *client, char **command, server_t *server);
 
+/**
+ * @brief Handles the CDUP command
+ *
+ * This function is responsible for handling the CDUP
+ * (Change to Parent Directory) command sent by the client.
+ * The CDUP command is used to change the current working directory to its
+ * parent directory on the server.
+ * It takes as parameters a pointer to the client structure, the command to
+ * be executed,
+ * and a pointer to the server structure.
+ *
+ * @param client A pointer to the client structure. This structure contains
+ * information about the client.
+ * @param command The command to be executed. This is a string representing
+ * the command sent by the client.
+ * @param server A pointer to the server structure. This structure contains
+ * information about the server.
+ */
+void cdup_command(client_t *client, char **command, server_t *server);
+
 static const command_component_t COMMANDS[] = {
     {"USER", &user_command},
     {"PASS", &pass_command},

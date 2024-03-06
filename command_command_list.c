@@ -67,3 +67,26 @@ void cwd_command(client_t *client, char **command, server_t *server)
     client->pwd = getcwd(NULL, 0);
     dprintf(client->socket, "250 Requested file action okay, completed.\r\n");
 }
+
+void cdup_command(client_t *client, char **command, server_t *server)
+{
+    (void)(server);
+    if (client->is_logged == false) {
+        dprintf(client->socket, "530 Not logged in\r\n");
+        return;
+    }
+    if (!check_param(command[1], client->socket, NOT_EXIST))
+        return;
+    if (strcmp(client->pwd, "/") == 0) {
+        dprintf(client->socket, "550 Requested action not taken; "
+                                "file unavailable…\r\n");
+        return;
+    }
+    if (chdir("..") == -1) {
+        dprintf(client->socket, "550 Requested action not taken; file "
+                                "unavailable…\r\n");
+        return;
+    }
+    client->pwd = getcwd(NULL, 0);
+    dprintf(client->socket, "200 Command okay.\r\n");
+}
