@@ -7,10 +7,25 @@
 
 #include "include/command.h"
 
+static bool check_param(const char *command, int client_socket, exist_t exist)
+{
+    if (command == NULL && exist == EXIST) {
+        dprintf(client_socket, "501 Syntax error in parameters or "
+                                "argument.\r\n");
+        return false;
+    }
+    if (command != NULL && exist == NOT_EXIST) {
+        dprintf(client_socket, "501 Syntax error in parameters or "
+                                "argument.\r\n");
+        return false;
+    }
+    return true;
+}
+
 void user_command(client_t *client, char **command, server_t *server)
 {
     (void)(server);
-    if (command[1] == NULL) {
+    if (!check_param(command[1], client->socket, EXIST))
         dprintf(client->socket, "530 Permission denied.\r\n");
         return;
     }

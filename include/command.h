@@ -14,6 +14,11 @@ typedef struct command_component_s {
     void (*function)(client_t *client, char **command, server_t *server);
 } command_component_t;
 
+typedef enum {
+    EXIST,
+    NOT_EXIST
+} exist_t;
+
 /**
  * @brief Handles the client's command
  *
