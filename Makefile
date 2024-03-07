@@ -5,15 +5,17 @@
 ## Makefile
 ##
 
-SRC	=	main.c					\
-        myftp.c					\
-		client_list.c			\
-		server_loop.c			\
-		check_return_value.c	\
-		client_list_bis.c		\
-		command.c				\
-		user_directories_fct.c	\
-		return_error_code.c		\
+SRC	=	main.c						\
+        myftp.c						\
+		client_list.c				\
+		server_loop.c				\
+		check_return_value.c		\
+		client_list_bis.c			\
+		command.c					\
+		user_directories_fct.c		\
+		return_error_code.c			\
+		quit_dele_help_noop_fct.c	\
+		check_param.c				\
 
 OBJ	=	$(SRC:.c=.o)
 
@@ -24,7 +26,7 @@ TESTS_SRC = $(filter-out main.c, $(SRC))	\
 			tests/test_error_case.c			\
 			tests/tests_linked_list.c		\
 
-SATAN = -W -Wall -Wextra -Werror -Wshadow
+SATAN = -W -Wall -Wextra -Werror -Wshadow -g
 
 INCLUDE = -I./include
 
