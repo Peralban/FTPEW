@@ -9,11 +9,12 @@
 #include "include/server.h"
 #include "include/return_error_code.h"
 
-void handle_client_command(client_t **client, char **command, server_t **serv)
+void handle_client_command(client_t **client, char **command, server_t **serv,
+    client_list_t **client_list)
 {
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 9; i++) {
         if (strcmp(command[0], COMMANDS[i].command) == 0) {
-            COMMANDS[i].function(*client, command, *serv);
+            COMMANDS[i].function(*client, command, *serv, client_list);
             return;
         }
         if (COMMANDS[i].command == NULL)
