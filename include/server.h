@@ -33,6 +33,12 @@ typedef enum {
     CHDIR
 } error_type_t;
 
+typedef enum {
+    UNKNOW,
+    PASSIVE,
+    ACTIVE
+} transfer_mode_t;
+
 
 typedef enum {
     FILE_TRANSFER,
@@ -56,6 +62,7 @@ typedef struct client_s {
     char *true_path;    //The real password
     char *pwd;          //Current directory
     char *home;         //Home directory
+    transfer_mode_t mode;
 } client_t;
 
 typedef struct client_list_s {

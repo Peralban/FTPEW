@@ -35,6 +35,7 @@ client_t *create_client(int socket, struct sockaddr_in *clientAddress,
     client->pwd = strdup("/");
     client->home = strdup(true_path);
     client->true_path = strdup(true_path);
+    client->mode = UNKNOW;
     return (client);
 }
 
@@ -57,6 +58,7 @@ void add_client_to_list(client_list_t **list, client_t *client)
         tmp->next->client = client;
         tmp->next->next = NULL;
         tmp->next->prev = tmp;
+        tmp->list_size = (*list)->list_size;
     }
 }
 
