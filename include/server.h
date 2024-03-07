@@ -69,6 +69,7 @@ typedef struct server_s {
     char *path;
     int port;
     int socket;
+    fd_set readfds;
     struct sockaddr_in *serverAddress;
 } server_t;
 
@@ -112,18 +113,6 @@ void add_client_to_list(client_list_t **list, client_t *client);
  * @param client A pointer to the client to be removed.
  */
 void remove_client_from_list(client_list_t **list, client_t *client);
-
-
-/**
- * @brief Removes a client from a client list by socket.
- *
- * This function removes a client from a given client list using the client's
- * socket.
- *
- * @param list A double pointer to the client list.
- * @param socket The socket of the client to be removed.
- */
-void remove_client_from_list_by_socket(client_list_t **list, int socket);
 
 /**
  * @brief Retrieves a client from a client list by socket.

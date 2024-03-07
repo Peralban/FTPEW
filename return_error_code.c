@@ -12,8 +12,14 @@ static const char *strfusion(const char *str1, char *str2)
 {
     char *result = NULL;
 
-    if (str2 == NULL)
-        return (str1);
+    if (str2 == NULL) {
+        result = malloc(strlen(str1) + 3);
+        if (result == NULL)
+            return (str1);
+        strcpy(result, str1);
+        strcat(result, "\r\n");
+        return (result);
+    }
     result = malloc(strlen(str1) + strlen(str2) + 3);
     if (result == NULL)
         return (str1);
