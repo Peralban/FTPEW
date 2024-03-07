@@ -88,9 +88,8 @@ int server_loop(server_t *server)
     int select_status;
 
     while (1) {
-        if (FD_ISSET(server->socket, &server->readfds)) {
+        if (FD_ISSET(server->socket, &server->readfds))
             new_client(&list, server);
-        }
         FD_ZERO(&server->readfds);
         set_all_in_fd(server, list, &max_fd);
         select_status = select(max_fd + 1, &server->readfds, NULL, NULL, NULL);
