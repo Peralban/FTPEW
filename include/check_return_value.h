@@ -13,6 +13,7 @@ static const char *error_messages[] = {
     "Binding failed",
     "Listening failed",
     "Select failed",
+    "Connect failed",
     "Accept failed",
     "Read failed",
     "Write failed",

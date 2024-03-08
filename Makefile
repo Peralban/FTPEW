@@ -16,9 +16,11 @@ SRC	=	main.c						\
 		return_error_code.c			\
 		quit_dele_help_noop_fct.c	\
 		check_param.c				\
-		retr_stor_list.c			\
+		retr_command.c				\
 		pasv_port_fct.c				\
 		create_passive_server.c		\
+		stor_command.c				\
+		list_command.c				\
 
 OBJ	=	$(SRC:.c=.o)
 

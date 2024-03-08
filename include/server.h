@@ -26,6 +26,7 @@ typedef enum {
     BIND,
     LISTEN,
     SELECT,
+    CONNECT,
     ACCEPT,
     READ,
     WRITE,

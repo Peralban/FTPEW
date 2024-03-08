@@ -23,6 +23,7 @@ static const char *MESSAGES[] = {
     "331 User name okay, need password.",
     "332 Need account for login.",
     "425 Set PASV or PORT before.",
+    "451 Requested action aborted: local error in processing.",
     "500 Syntax error, command unrecognized.",
     "501 Syntax error in parameters or arguments.",
     "502 Command not implemented.",
