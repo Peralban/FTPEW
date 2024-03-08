@@ -16,7 +16,7 @@ static const char *MESSAGES[] = {
     "220 Service ready for new user.",
     "221 Service closing control connection, logged out if appropriate.",
     "226 Closing data connection.",
-    "227 Entering Passive Mode (h1,h2,h3,h4,p1,p2).",
+    "227 Entering Passive Mode ",
     "230 User logged in, proceed.",
     "250 Requested file action okay, completed.",
     "257 ",

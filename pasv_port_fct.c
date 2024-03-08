@@ -18,6 +18,7 @@ static void clear_data(client_t *client)
             close(client->clientServer->socket);
     }
     memset(client->clientServer, 0, sizeof(&(client->clientServer)));
+    client->clientServer->serverAddress = malloc(sizeof(struct sockaddr_in));
 }
 
 static bool check_info(int *parsed_ip)
@@ -38,9 +39,8 @@ static void pasv_bis(client_t *client, int socket)
     sscanf(ipaddress, "%d.%d.%d.%d", &ip_numbers[0], &ip_numbers[1],
     &ip_numbers[2], &ip_numbers[3]);
     port = ntohs(client->clientServer->serverAddress->sin_port);
-    dprintf(client->socket, return_error(C227, "Entering Passive Mode "
-    "(%d,%d,%d,%d,%d,%d).\n"), ip_numbers[1], ip_numbers[2],
-    ip_numbers[3], port / 256, port % 256);
+    dprintf(client->socket, return_error(C227, "(%d,%d,%d,%d,%d,%d).\n"),
+        ip_numbers[1], ip_numbers[2], ip_numbers[3], port / 256, port % 256);
     client->mode = PASSIVE;
     client->clientServer->socket = socket;
 }
