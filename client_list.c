@@ -23,19 +23,22 @@ client_t *create_client(int socket, struct sockaddr_in *clientAddress,
 {
     client_t *client = malloc(sizeof(client_t));
 
+    client->clientServer = malloc(sizeof(struct sockaddr_in) * 1);
     client->socket = socket;
     client->clientAddress = clientAddress;
-    client->state = OTHER;
+    client->mode = UNKNOW;
+    client->clientServer->socket = -1;
+    client->clientServer->serverAddress = NULL;
+    client->dataSocket = -1;
     client->file_name = NULL;
     client->file_content = NULL;
-    client->is_logged = true;
+    client->is_logged = false;
     client->username_is_logged = false;
     client->username = NULL;
     client->password = NULL;
     client->pwd = strdup("/");
     client->home = strdup(true_path);
     client->true_path = strdup(true_path);
-    client->mode = UNKNOW;
     return (client);
 }
 

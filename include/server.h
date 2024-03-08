@@ -22,6 +22,7 @@
 
 typedef enum {
     SOCKET,
+    SETSOCKOPT,
     BIND,
     LISTEN,
     SELECT,
@@ -39,18 +40,19 @@ typedef enum {
     ACTIVE
 } transfer_mode_t;
 
-
-typedef enum {
-    FILE_TRANSFER,
-    OTHER
-} client_state_t;
+typedef struct client_server_s {
+    int socket;
+    struct sockaddr_in *serverAddress;
+} client_server_t;
 
 typedef struct client_s {
     //Client info
     int socket;
     struct sockaddr_in *clientAddress;
-    //Type transfer info
-    client_state_t state;
+    //Type transfer
+    transfer_mode_t mode;
+    client_server_t *clientServer;
+    int dataSocket;
     //If file transfer
     char *file_name;
     char *file_content;
@@ -62,7 +64,6 @@ typedef struct client_s {
     char *true_path;    //The real password
     char *pwd;          //Current directory
     char *home;         //Home directory
-    transfer_mode_t mode;
 } client_t;
 
 typedef struct client_list_s {
