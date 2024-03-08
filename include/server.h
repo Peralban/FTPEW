@@ -70,7 +70,6 @@ typedef struct client_list_s {
     client_t *client;
     struct client_list_s *next;
     struct client_list_s *prev;
-    int list_size;
 } client_list_t;
 
 typedef struct server_s {
