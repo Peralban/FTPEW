@@ -38,7 +38,6 @@ void help_command(client_t *client, char **command, server_t *serv
     __attribute__((unused)), client_list_t **client_list
     __attribute__((unused)))
 {
-    printf("help_command\n");
     if (!check_param(command[1], client->socket, NOT_EXIST)) {
         dprintf(client->socket, return_error(E501, NULL));
         return;

@@ -20,14 +20,14 @@ static int create_socket(void)
 
 int create_passive_server(void)
 {
+    int bindStatus;
+    int listenStatus;
     int fd = create_socket();
     struct sockaddr_in serverAddress = {0};
-    int bindStatus = 0;
-    int listenStatus = 0;
 
     serverAddress.sin_family = AF_INET;
-    serverAddress.sin_addr.s_addr = htons(INADDR_ANY);
-    serverAddress.sin_port = htons(6969);
+    serverAddress.sin_addr.s_addr = INADDR_ANY;
+    serverAddress.sin_port = 0;
     bindStatus = bind(fd, (struct sockaddr *)&serverAddress,
     sizeof(serverAddress));
     check_return_value(bindStatus, BIND);

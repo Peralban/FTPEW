@@ -39,8 +39,9 @@ static void pasv_bis(client_t *client, int socket)
     sscanf(ipaddress, "%d.%d.%d.%d", &ip_numbers[0], &ip_numbers[1],
     &ip_numbers[2], &ip_numbers[3]);
     port = ntohs(client->clientServer->serverAddress->sin_port);
-    dprintf(client->socket, return_error(C227, "(%d,%d,%d,%d,%d,%d).\n"),
-        ip_numbers[1], ip_numbers[2], ip_numbers[3], port / 256, port % 256);
+    dprintf(client->socket, return_error(C227, "(%d,%d,%d,%d,%d,%d)."),
+        ip_numbers[0], ip_numbers[1], ip_numbers[2], ip_numbers[3],
+        port / 256, port % 256);
     client->mode = PASSIVE;
     client->clientServer->socket = socket;
 }
@@ -50,6 +51,7 @@ void pasv_command(client_t *client, char **command, server_t *serv
     __attribute__((unused)))
 {
     int socket;
+    socklen_t size = sizeof(client->clientServer->serverAddress);
 
     if (!client->is_logged) {
         dprintf(client->socket, return_error(E530, NULL));
@@ -63,7 +65,7 @@ void pasv_command(client_t *client, char **command, server_t *serv
     socket = create_passive_server();
     check_return_value(socket, SOCKET);
     getsockname(socket, (struct sockaddr *)client->clientServer->serverAddress,
-        (socklen_t *)&client->clientServer->serverAddress->sin_port);
+    &size);
     pasv_bis(client, socket);
 }
 
@@ -74,10 +76,12 @@ static void create_new_socket(client_t *client, int *parsed_ip)
 
     sprintf(ip, "%d.%d.%d.%d", parsed_ip[0], parsed_ip[1], parsed_ip[2],
         parsed_ip[3]);
-    inet_aton(ip, &client->clientServer->serverAddress->sin_addr);
+    client->clientServer->socket = socket(AF_INET, SOCK_STREAM, 0);
+    check_return_value(client->clientServer->socket, SOCKET);
+    client->clientServer->serverAddress->sin_addr.s_addr = inet_addr(ip);
     client->clientServer->serverAddress->sin_port = port;
     client->clientServer->serverAddress->sin_family = AF_INET;
-    dprintf(client->socket, return_error(C200, "PORT command successful.\n"));
+    dprintf(client->socket, return_error(C200, "PORT command successful."));
     client->mode = ACTIVE;
 }
 
