@@ -25,6 +25,7 @@ typedef enum ERROR_CODES {
     C257,
     C331,
     C332,
+    E425,
     E500,
     E501,
     E502,

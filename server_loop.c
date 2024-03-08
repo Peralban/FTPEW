@@ -8,6 +8,7 @@
 #include "include/server.h"
 #include "include/command.h"
 #include "include/my.h"
+#include "include/return_error_code.h"
 
 static void new_client(client_list_t **list, server_t *server)
 {
@@ -20,6 +21,7 @@ static void new_client(client_list_t **list, server_t *server)
     add_client_to_list(list, create_client(client_socket,
     &client_address, server->path));
     FD_SET(client_socket, &server->readfds);
+    dprintf(client_socket, return_error(C220, NULL));
 }
 
 static char *take_good_buff(char *buffer)
@@ -88,9 +90,8 @@ int server_loop(server_t *server)
     int select_status;
 
     while (1) {
-        if (FD_ISSET(server->socket, &server->readfds)) {
+        if (FD_ISSET(server->socket, &server->readfds))
             new_client(&list, server);
-        }
         FD_ZERO(&server->readfds);
         set_all_in_fd(server, list, &max_fd);
         select_status = select(max_fd + 1, &server->readfds, NULL, NULL, NULL);

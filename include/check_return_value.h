@@ -9,6 +9,7 @@
 
 static const char *error_messages[] = {
     "Socket creation failed",
+    "Setsockopt failed",
     "Binding failed",
     "Listening failed",
     "Select failed",

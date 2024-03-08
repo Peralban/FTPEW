@@ -8,41 +8,45 @@
 #include "include/command.h"
 #include "include/check_param.h"
 
-void user_command(client_t *client, char **command, server_t *server,
-    client_list_t **client_list)
+void user_command(client_t *client, char **command, server_t *server
+    __attribute__((unused)), client_list_t **client_list
+    __attribute__((unused)))
 {
-    (void)(server);
-    (void)(client_list);
-    if (!check_param(command[1], client->socket, EXIST))
+    if (!check_param(command[1], client->socket, EXIST)) {
+        dprintf(client->socket, return_error(E501, NULL));
         return;
+    }
     client->username = strdup(command[1]);
-    client->username_is_logged = true;
-    dprintf(client->socket, return_error(C331, NULL));
-}
-
-void pass_command(client_t *client, char **command, server_t *server,
-    client_list_t **client_list)
-{
-    (void)(server);
-    (void)(client_list);
-    if (strcmp(client->username, "Anonymous") == 0 && command[1] == NULL) {
+    if (client->password == NULL) {
+        dprintf(client->socket, return_error(C331, NULL));
+        client->username_is_logged = true;
+    } else if (strcmp(client->username, "Anonymous") == 0 &&
+    strcmp(client->password, "") == 0) {
         dprintf(client->socket, return_error(C230, NULL));
         client->is_logged = true;
-        client->password = strdup("");
-        return;
-    }
-    if (client->username_is_logged == true) {
-        dprintf(client->socket, return_error(C332, NULL));
-        return;
-    }
+    } else
+        dprintf(client->socket, return_error(E530, NULL));
 }
 
-void cwd_command(client_t *client, char **command, server_t *server,
-    client_list_t **client_list)
+void pass_command(client_t *client, char **command, server_t *server
+    __attribute__((unused)), client_list_t **client_list
+    __attribute__((unused)))
 {
-    (void)(server);
-    (void)(client_list);
-    if (client->is_logged == false) {
+    if (client->username_is_logged && strcmp(client->username, "Anonymous")
+    == 0 && command[1] == NULL) {
+        dprintf(client->socket, return_error(C230, NULL));
+        client->is_logged = true;
+    } else if (!client->username_is_logged) {
+        dprintf(client->socket, return_error(C332, NULL));
+    } else
+        dprintf(client->socket, return_error(E530, NULL));
+}
+
+void cwd_command(client_t *client, char **command, server_t *server
+    __attribute__((unused)), client_list_t **client_list
+    __attribute__((unused)))
+{
+    if (!client->is_logged) {
         dprintf(client->socket, return_error(E530, NULL));
         return;
     }
@@ -58,12 +62,11 @@ void cwd_command(client_t *client, char **command, server_t *server,
     dprintf(client->socket, return_error(C250, NULL));
 }
 
-void cdup_command(client_t *client, char **command, server_t *server,
-    client_list_t **client_list)
+void cdup_command(client_t *client, char **command, server_t *server
+    __attribute__((unused)), client_list_t **client_list
+    __attribute__((unused)))
 {
-    (void)(client_list);
-    (void)(server);
-    if (client->is_logged == false) {
+    if (!client->is_logged) {
         dprintf(client->socket, return_error(E530, NULL));
         return;
     }
@@ -81,11 +84,10 @@ void cdup_command(client_t *client, char **command, server_t *server,
     dprintf(client->socket, return_error(C200, NULL));
 }
 
-void pwd_command(client_t *client, char **command, server_t *server,
-    client_list_t **client_list)
+void pwd_command(client_t *client, char **command, server_t *server
+    __attribute__((unused)), client_list_t **client_list
+    __attribute__((unused)))
 {
-    (void) client_list;
-    (void) server;
     if (client->is_logged == false) {
         dprintf(client->socket, return_error(E530, NULL));
         return;
