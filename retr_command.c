@@ -15,6 +15,7 @@ static void do_retr_command(int accept_socket, client_t *client,
     FILE *file = fopen(file_name, "r");
     char buffer[1];
 
+    dprintf(client->socket, return_error(C150, NULL));
     if (file == NULL) {
         dprintf(client->socket, return_error(E550, NULL));
         return;
@@ -25,7 +26,6 @@ static void do_retr_command(int accept_socket, client_t *client,
     close(accept_socket);
     close(client->clientServer->socket);
     dprintf(client->socket, return_error(C226, NULL));
-    client->mode = UNKNOW;
     exit(0);
 }
 
@@ -41,23 +41,24 @@ static void retr_command_passive(client_t *client, char *file_name)
         do_retr_command(accept_socket, client, file_name);
     close(accept_socket);
     close(client->clientServer->socket);
+    client->mode = UNKNOW;
 }
 
 static void retr_command_active(client_t *client,
     server_t *serv __attribute__((unused)))
 {
     int pid;
-    socklen_t size = sizeof(client->clientServer->serverAddress);
-    int accept_socket = connect(client->clientServer->socket,
-    (struct sockaddr *)client->clientServer->serverAddress, size);
+    socklen_t size = sizeof(struct sockaddr_in);
+    int return_value = connect(client->clientServer->socket,
+    (struct sockaddr *) (client->clientServer->serverAddress), size);
 
-    check_return_value(accept_socket, CONNECT);
+    check_return_value(return_value, CONNECT);
     pid = fork();
     check_return_value(pid, FORK);
     if (pid == 0)
-        do_retr_command(accept_socket, client, client->file_name);
-    close(accept_socket);
-    close(client->clientServer->socket);
+        do_retr_command(client->clientServer->socket,
+        client, client->file_name);
+    client->mode = UNKNOW;
 }
 
 void retr_command(client_t *client, char **command, server_t *serv

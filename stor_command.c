@@ -29,7 +29,6 @@ static void do_stor_command(int accept_socket, client_t *client,
     close(fd);
     close(accept_socket);
     dprintf(client->socket, return_error(C226, NULL));
-    client->mode = UNKNOW;
     exit(0);
 }
 
@@ -45,23 +44,23 @@ static void stor_command_passive(client_t *client, char *file_name)
         do_stor_command(accept_socket, client, file_name);
     close(accept_socket);
     close(client->clientServer->socket);
+    client->mode = UNKNOW;
 }
 
 static void stor_command_active(client_t *client, server_t *serv
     __attribute__((unused)), char *file_name)
 {
     int pid;
-    socklen_t size = sizeof(client->clientServer->serverAddress);
-    int accept_socket = connect(client->clientServer->socket,
-    (struct sockaddr *)client->clientServer->serverAddress, size);
+    socklen_t size = sizeof(struct sockaddr_in);
+    int return_value = connect(client->clientServer->socket,
+    (struct sockaddr *) (client->clientServer->serverAddress), size);
 
-    check_return_value(accept_socket, CONNECT);
+    check_return_value(return_value, CONNECT);
     pid = fork();
     check_return_value(pid, FORK);
     if (pid == 0)
-        do_stor_command(accept_socket, client, file_name);
-    close(accept_socket);
-    close(client->clientServer->socket);
+        do_stor_command(client->clientServer->socket, client, file_name);
+    client->mode = UNKNOW;
 }
 
 void stor_command(client_t *client, char **command, server_t *serv
