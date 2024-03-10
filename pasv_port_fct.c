@@ -81,7 +81,7 @@ static void create_new_socket(client_t *client, int *parsed_ip)
     client->clientServer->serverAddress->sin_addr.s_addr = inet_addr(ip);
     client->clientServer->serverAddress->sin_port = port;
     client->clientServer->serverAddress->sin_family = AF_INET;
-    dprintf(client->socket, return_error(C200, "PORT command successful."));
+    dprintf(client->socket, return_error(C200, " PORT command successful."));
     client->mode = ACTIVE;
 }
 
