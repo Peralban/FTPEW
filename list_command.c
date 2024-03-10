@@ -40,23 +40,24 @@ static void list_command_passive(client_t *client)
         do_ls_command(accept_socket, client);
     close(accept_socket);
     close(client->clientServer->socket);
+    client->mode = UNKNOW;
 }
 
 static void list_command_active(client_t *client, server_t *serv
     __attribute__((unused)))
 {
     int pid;
-    socklen_t size = sizeof(client->clientServer->serverAddress);
-    int accept_socket = connect(client->clientServer->socket,
-    (struct sockaddr *) client->clientServer->serverAddress, size);
+    socklen_t size = sizeof(&client->clientServer->serverAddress);
+    int return_value = connect(client->clientServer->socket,
+        (struct sockaddr *)client->clientServer->serverAddress, size);
 
-    check_return_value(accept_socket, CONNECT);
+    check_return_value(return_value, CONNECT);
     pid = fork();
     check_return_value(pid, FORK);
     if (pid == 0)
-        do_ls_command(accept_socket, client);
-    close(accept_socket);
+        do_ls_command(client->clientServer->socket, client);
     close(client->clientServer->socket);
+    client->mode = UNKNOW;
 }
 
 void list_command(client_t *client, char **command, server_t *serv
