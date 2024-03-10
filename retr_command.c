@@ -25,6 +25,7 @@ static void do_retr_command(int accept_socket, client_t *client,
     close(accept_socket);
     close(client->clientServer->socket);
     dprintf(client->socket, return_error(C226, NULL));
+    client->mode = UNKNOW;
     exit(0);
 }
 
