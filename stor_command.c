@@ -14,18 +14,15 @@ static void do_stor_command(int accept_socket, client_t *client,
     char *file_name)
 {
     int fd = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    char buffer[1024];
-    int size = 1;
+    char buffer[1];
 
     dprintf(client->socket, return_error(C150, NULL));
     if (fd == -1) {
         dprintf(client->socket, return_error(E550, NULL));
         return;
     }
-    for (; size > 0; size = read(accept_socket, buffer, 1024)) {
-        buffer[size] = '\0';
+    for (; read(accept_socket, buffer, 1) > 0;)
         dprintf(fd, "%s", buffer);
-    }
     close(fd);
     close(accept_socket);
     dprintf(client->socket, return_error(C226, NULL));
