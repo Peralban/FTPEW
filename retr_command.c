@@ -37,7 +37,7 @@ static void retr_command_passive(client_t *client, char *file_name)
     pid = fork();
     check_return_value(pid, FORK);
     if (pid == 0)
-        do_retr_command(1, client, file_name);
+        do_retr_command(accept_socket, client, file_name);
     close(accept_socket);
     close(client->clientServer->socket);
 }
